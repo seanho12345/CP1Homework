@@ -1,8 +1,8 @@
 CC := gcc
 LDFLAGS := -lm
-TARGETS := hw0501
+TARGETS := hw0501 hw0502
 hw0501_OBJ := iseven.o
-hw0502_OBJ :=
+hw0502_OBJ := deter.o
 hw0503_OBJ :=
 hw0504_OBJ :=
 hw0405_OBJ :=
