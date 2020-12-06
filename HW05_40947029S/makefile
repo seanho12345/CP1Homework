@@ -1,11 +1,11 @@
 CC := gcc
 LDFLAGS := -lm
-TARGETS := hw0501 hw0502 hw0503
+TARGETS := hw0501 hw0502 hw0503 hw0505
 hw0501_OBJ := iseven.o
 hw0502_OBJ := deter.o
 hw0503_OBJ := polynomial.o
 hw0504_OBJ :=
-hw0405_OBJ :=
+hw0505_OBJ := minesweeper.o
 
 .PHONY:all
 all:$(TARGETS)
