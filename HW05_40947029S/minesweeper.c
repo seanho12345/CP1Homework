@@ -7,6 +7,7 @@
 #define ANSI_TITLE "\033[7;32m"
 #define ANSI_RESET "\033[0m"
 #define ANSI_RED "\033[1;31m"
+#define ANSI_RED_BACK "\033[7;31m"
 #define ANSI_ERROR "\033[7;31m"
 #define ANSI_GREEN "\033[32m"
 #define ANSI_CYAN_BACK "\033[7;35m"
@@ -26,11 +27,11 @@ void ptrplus(int32_t *ptr, int32_t minew, int32_t mineh, int32_t w,int32_t h){
     *((ptr + mineh*w) + minew) = *((ptr + mineh*w) + minew)+1;
 } //pointer value++
 
-int32_t ptrvalue(int32_t *ptr, int32_t minew, int32_t mineh, int32_t w,int32_t h){
-    return *((ptr + mineh*w) + minew);
+int32_t ptrvalue(int32_t *ptr, int32_t x, int32_t y, int32_t w,int32_t h){
+    return *((ptr + y*w) + x);
 } //return value in data array using x,y cordinate
 
-void generatemine(int32_t num,int32_t w,int32_t h,int32_t *target_ptr){
+void generatemine(int32_t num,int32_t w,int32_t h,int32_t *target_ptr,int32_t *mine_ptr){
     srand(time(NULL));
     for(int32_t n=0; n<num; n++){
         int32_t minew = rand()%w, mineh = rand()%h;
@@ -39,6 +40,7 @@ void generatemine(int32_t num,int32_t w,int32_t h,int32_t *target_ptr){
             continue;
         }else{
             *((target_ptr + mineh*w) + minew) = -1;
+            *((mine_ptr + mineh*w) + minew) = 1;
             if(minew-1 >= 0){       //Check if upper,upper-left,upper-right is oob or bomb inside
                 if(mineh-1 >= 0){                                                   //upper-left
                     if(ptrvalue(target_ptr,minew-1,mineh-1,w,h) != -1){
@@ -85,7 +87,7 @@ void generatemine(int32_t num,int32_t w,int32_t h,int32_t *target_ptr){
     }
 }
 
-void printmap(int32_t w,int32_t h,int32_t *data_ptr,int32_t *mask_ptr){
+void printmap(int32_t w,int32_t h,int32_t *data_ptr,int32_t *mask_ptr,int32_t *fmask_ptr){
     printf("    ");
     for(int32_t i=0;i<w;i++){
         printf(ANSI_YELLOW "%02d  " ANSI_RESET  , i);
@@ -98,25 +100,72 @@ void printmap(int32_t w,int32_t h,int32_t *data_ptr,int32_t *mask_ptr){
     for(int32_t j=0;j<h;j++){
         printf(ANSI_YELLOW "%02d| " ANSI_RESET, j);
         for(int32_t i=0;i<w;i++){
-            if(ptrvalue(mask_ptr,i,j,w,h) == 0){
-                if(ptrvalue(data_ptr,i,j,w,h) == -1){
-                    printf(ANSI_RED " M  " ANSI_RESET);
+            if(ptrvalue(fmask_ptr,i,j,w,h) == 0){
+                if(ptrvalue(mask_ptr,i,j,w,h) == 0){
+                    if(ptrvalue(data_ptr,i,j,w,h) == -1){
+                        printf(ANSI_RED " M  " ANSI_RESET);
+                    }else if(ptrvalue(data_ptr,i,j,w,h) == 10){
+                        printf(ANSI_RED_BACK " M " ANSI_RESET);
+                        printf(" ");
+                    }else if(ptrvalue(data_ptr,i,j,w,h) == 0){
+                        printf("    ");
+                    }else{
+                        printf(" %d  ",ptrvalue(data_ptr,i,j,w,h));
+                    }
+                }else if(ptrvalue(mask_ptr,i,j,w,h) == 3){
+                    printf(ANSI_RED_BACK " M " ANSI_RESET);
+                    printf(" ");
                 }else{
-                    printf(" %d  ",ptrvalue(data_ptr,i,j,w,h));
+                    printf(" *  ");
                 }
-            }else if(ptrvalue(mask_ptr,i,j,w,h) == 2){
+            }else{
                 printf(ANSI_CYAN_BACK " F " ANSI_RESET);
                 printf(" ");
-            }else{
-                printf(" *  ");
             }
+
         }
         printf("\n");
     }
 }
 
-void mapopen(int32_t xpos,int32_t ypos,int32_t w,int32_t h,int32_t *data_ptr, int32_t *mask_ptr){
+int32_t mapopen(int32_t xpos,int32_t ypos,int32_t w,int32_t h,int32_t *data_ptr, int32_t *mask_ptr){
+    int32_t over = 0;
     if(ptrvalue(data_ptr,xpos,ypos,w,h) > 0){
         *((mask_ptr + ypos*w) + xpos) = 0;
+    }else if(ptrvalue(data_ptr,xpos,ypos,w,h) == 0){
+        *((mask_ptr + ypos*w) + xpos) = 0;
+        if(ypos-1 >= 0){
+            printf("1\n");
+            mapopen(xpos,ypos-1,w,h,data_ptr,mask_ptr);
+        }
+        if(ypos+1 < h){
+            printf("2\n");
+            mapopen(xpos,ypos+1,w,h,data_ptr,mask_ptr);
+        }
+        if(xpos-1 >= 0){
+            printf("3\n");
+            mapopen(xpos-1,ypos,w,h,data_ptr,mask_ptr);
+        }
+        if(xpos+1 < w){
+            printf("4\n");                                                
+            mapopen(xpos+1,ypos,w,h,data_ptr,mask_ptr);
+        }
+    }else if(ptrvalue(data_ptr,xpos,ypos,w,h) == -1){
+        over = 1;
+        *((data_ptr + ypos*w) + xpos) = 10;
     }
+    return over;
+}
+
+int32_t checkflag(int32_t w,int32_t h,int32_t *fmask_ptr,int32_t *mine_ptr){
+    int32_t over = 2;
+    for(int32_t i=0;i<h && over == 2;i++){
+        for(int32_t j=0;j<w;j++){
+            if(ptrvalue(fmask_ptr,i,j,w,h) != ptrvalue(mine_ptr,i,j,w,h)){
+                over = 0;
+                break;
+            }
+        }
+    }
+    return over;
 }
