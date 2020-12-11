@@ -74,7 +74,13 @@ int main(){
             }
             over = checkflag(w,h,(int32_t *)fmask,(int32_t *)mine);
         }else if(option == 1){
-            over = mapopen(xpos,ypos,w,h,(int32_t *)data,(int32_t *)mask);
+            int32_t checked[h][w];
+            for(int32_t i=0;i<h;i++){
+                for(int32_t j=0;j<w;j++){
+                    checked[i][j] = 0;
+                }
+            }
+            over = mapopen(xpos,ypos,w,h,(int32_t *)data,(int32_t *)mask,(int32_t *)checked);
         }
         if(over == 0){
             printmap(w,h,(int32_t *)data,(int32_t *)mask,(int32_t *)fmask);
@@ -99,23 +105,3 @@ int main(){
     }
     return 0;
 }
-
-/*
-Please enter the width (10-16): 10
-Please enter the height (10-16): 10
-Please enter the mine number (30-90): 10
-   00 01 02 03 04 05 06 07 08 09
----------------------------------
-00| * * * * * * * * * *
-01| * * * * * * * * * *
-02| * * * * * * * * * *
-03| * * * * * * * * * *
-04| * * * * * * * * * *
-05| * * * * * * * * * *
-06| * * * * * * * * * *
-07| * * * * * * * * * *
-08| * * * * * * * * * *
-09| * * * * * * * * * *
-Your Option (1:Open, 2: Flag): 1
-Position (row,column): 0 1
-*/

@@ -128,27 +128,28 @@ void printmap(int32_t w,int32_t h,int32_t *data_ptr,int32_t *mask_ptr,int32_t *f
     }
 }
 
-int32_t mapopen(int32_t xpos,int32_t ypos,int32_t w,int32_t h,int32_t *data_ptr, int32_t *mask_ptr){
+int32_t mapopen(int32_t xpos,int32_t ypos,int32_t w,int32_t h,int32_t *data_ptr, int32_t *mask_ptr,int32_t *checked_ptr){
     int32_t over = 0;
+    if(ptrvalue(checked_ptr,xpos,ypos,w,h) == 1){
+        return 0;
+    }
     if(ptrvalue(data_ptr,xpos,ypos,w,h) > 0){
         *((mask_ptr + ypos*w) + xpos) = 0;
+        *((checked_ptr + ypos*w) + xpos) = 1;
     }else if(ptrvalue(data_ptr,xpos,ypos,w,h) == 0){
         *((mask_ptr + ypos*w) + xpos) = 0;
+        *((checked_ptr + ypos*w) + xpos) = 1;
         if(ypos-1 >= 0){
-            printf("1\n");
-            mapopen(xpos,ypos-1,w,h,data_ptr,mask_ptr);
+            mapopen(xpos,ypos-1,w,h,data_ptr,mask_ptr,checked_ptr);
         }
         if(ypos+1 < h){
-            printf("2\n");
-            mapopen(xpos,ypos+1,w,h,data_ptr,mask_ptr);
+            mapopen(xpos,ypos+1,w,h,data_ptr,mask_ptr,checked_ptr);
         }
         if(xpos-1 >= 0){
-            printf("3\n");
-            mapopen(xpos-1,ypos,w,h,data_ptr,mask_ptr);
+            mapopen(xpos-1,ypos,w,h,data_ptr,mask_ptr,checked_ptr);
         }
         if(xpos+1 < w){
-            printf("4\n");                                                
-            mapopen(xpos+1,ypos,w,h,data_ptr,mask_ptr);
+            mapopen(xpos+1,ypos,w,h,data_ptr,mask_ptr,checked_ptr);
         }
     }else if(ptrvalue(data_ptr,xpos,ypos,w,h) == -1){
         over = 1;
