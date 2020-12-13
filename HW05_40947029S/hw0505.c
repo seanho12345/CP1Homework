@@ -26,7 +26,7 @@ int main(){
     while(valid == 0){
         printf("Please enter the mine number (30-90): ");
         valid = scanf("%d", &minenum);
-        valid = checkvalid(valid,minenum,0,90);
+        valid = checkvalid(valid,minenum,30,90);
     }
     valid = 0;
     int32_t data[h][w],mine[h][w],mask[h][w],fmask[h][w];
@@ -47,8 +47,8 @@ int main(){
             printf("\n");
         }
     }
-    printmap(w,h,(int32_t *)data,(int32_t *)fmask,(int32_t *)fmask);
-    //printmap(w,h,(int32_t *)data,(int32_t *)mask,(int32_t *)fmask);
+    //printmap(w,h,(int32_t *)data,(int32_t *)fmask,(int32_t *)fmask);
+    printmap(w,h,(int32_t *)data,(int32_t *)mask,(int32_t *)fmask);
     while(over == 0){
         while(valid == 0){
             printf("Your Option (1:Open, 2: Flag): ");
