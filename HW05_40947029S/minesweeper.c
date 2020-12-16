@@ -23,8 +23,8 @@ int32_t checkvalid(int32_t valid,int32_t input,int32_t min,int32_t max){
     }
     return valid;
 }
-void ptrplus(int32_t *ptr, int32_t minew, int32_t mineh, int32_t w,int32_t h){
-    *((ptr + mineh*w) + minew) = *((ptr + mineh*w) + minew)+1;
+void ptrplus(int32_t *ptr, int32_t x, int32_t y, int32_t w,int32_t h){
+    *((ptr + y*w) + x) = *((ptr + y*w) + x)+1;
 } //pointer value++
 
 int32_t ptrvalue(int32_t *ptr, int32_t x, int32_t y, int32_t w,int32_t h){
@@ -34,53 +34,53 @@ int32_t ptrvalue(int32_t *ptr, int32_t x, int32_t y, int32_t w,int32_t h){
 void generatemine(int32_t num,int32_t w,int32_t h,int32_t *target_ptr,int32_t *mine_ptr){
     srand(time(NULL));
     for(int32_t n=0; n<num; n++){
-        int32_t minew = rand()%w, mineh = rand()%h;
-        if(ptrvalue(target_ptr,minew,mineh,w,h) == -1){
+        int32_t minex = rand()%w, miney = rand()%h;
+        if(ptrvalue(target_ptr,minex,miney,w,h) == -1){
             n--;
             continue;
         }else{
-            *((target_ptr + mineh*w) + minew) = -1;
-            *((mine_ptr + mineh*w) + minew) = 1;
-            if(minew-1 >= 0){       //Check if upper,upper-left,upper-right is oob or bomb inside
-                if(mineh-1 >= 0){                                                   //upper-left
-                    if(ptrvalue(target_ptr,minew-1,mineh-1,w,h) != -1){
-                        ptrplus(target_ptr,minew-1,mineh-1,w,h);
+            *((target_ptr + miney*w) + minex) = -1;
+            *((mine_ptr + miney*w) + minex) = 1;
+            if(minex-1 >= 0){       //Check if upper,upper-left,upper-right is oob or bomb inside
+                if(miney-1 >= 0){                                                   //upper-left
+                    if(ptrvalue(target_ptr,minex-1,miney-1,w,h) != -1){
+                        ptrplus(target_ptr,minex-1,miney-1,w,h);
                     }
 
                 }
-                if(mineh+1 < w){                                                    //upper-right
-                    if(ptrvalue(target_ptr,minew-1,mineh+1,w,h) != -1){
-                        ptrplus(target_ptr,minew-1,mineh+1,w,h);
+                if(miney+1 < h){                                                    //upper-right
+                    if(ptrvalue(target_ptr,minex-1,miney+1,w,h) != -1){
+                        ptrplus(target_ptr,minex-1,miney+1,w,h);
                     }
                 }
-                if(ptrvalue(target_ptr,minew-1,mineh,w,h) != -1){                   //upper
-                    ptrplus(target_ptr,minew-1,mineh,w,h);
+                if(ptrvalue(target_ptr,minex-1,miney,w,h) != -1){                   //upper
+                    ptrplus(target_ptr,minex-1,miney,w,h);
                 }
             }
-            if(minew+1 < h){        //Check if lower,lower-left,lower-right is oob or bomb inside
-                if(mineh-1 >= 0){                                                   //lower-left
-                    if(ptrvalue(target_ptr,minew+1,mineh-1,w,h) != -1){
-                        ptrplus(target_ptr,minew+1,mineh-1,w,h);
+            if(minex+1 < w){        //Check if lower,lower-left,lower-right is oob or bomb inside
+                if(miney-1 >= 0){                                                   //lower-left
+                    if(ptrvalue(target_ptr,minex+1,miney-1,w,h) != -1){
+                        ptrplus(target_ptr,minex+1,miney-1,w,h);
                     }
                 }
-                if(mineh+1 < w){                                                    //lower-right
-                    if(ptrvalue(target_ptr,minew+1,mineh+1,w,h) != -1){
-                        ptrplus(target_ptr,minew+1,mineh+1,w,h);
+                if(miney+1 < h){                                                    //lower-right
+                    if(ptrvalue(target_ptr,minex+1,miney+1,w,h) != -1){
+                        ptrplus(target_ptr,minex+1,miney+1,w,h);
                     }
                 }
-                if(ptrvalue(target_ptr,minew+1,mineh,w,h) != -1){                   //lower
-                    ptrplus(target_ptr,minew+1,mineh,w,h);
+                if(ptrvalue(target_ptr,minex+1,miney,w,h) != -1){                   //lower
+                    ptrplus(target_ptr,minex+1,miney,w,h);
                 }
 
             }
-            if(mineh-1 >= 0){                                                       //middle-left
-                if(ptrvalue(target_ptr,minew,mineh-1,w,h) != -1){
-                    ptrplus(target_ptr,minew,mineh-1,w,h);
+            if(miney-1 >= 0){                                                       //middle-left
+                if(ptrvalue(target_ptr,minex,miney-1,w,h) != -1){
+                    ptrplus(target_ptr,minex,miney-1,w,h);
                 }
             }
-            if(mineh+1 < w){                                                        //middle-right
-                if(ptrvalue(target_ptr,minew,mineh+1,w,h) != -1){
-                    ptrplus(target_ptr,minew,mineh+1,w,h);
+            if(miney+1 < h){                                                        //middle-right
+                if(ptrvalue(target_ptr,minex,miney+1,w,h) != -1){
+                    ptrplus(target_ptr,minex,miney+1,w,h);
                 }
             }
         }
