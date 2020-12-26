@@ -1,9 +1,9 @@
 CC := gcc
 LDFLAGS := -lm
-TARGETS := hw0602
+TARGETS := hw0602 hw0603
 hw0601_OBJ :=
 hw0602_OBJ := reun.o
-hw0603_OBJ :=
+hw0603_OBJ := rotate.o
 hw0604_OBJ :=
 hw0605_OBJ :=
 
