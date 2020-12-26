@@ -1,10 +1,10 @@
 CC := gcc
 LDFLAGS := -lm
-TARGETS := hw0602 hw0603
+TARGETS := hw0602 hw0603 hw0604
 hw0601_OBJ :=
 hw0602_OBJ := reun.o
 hw0603_OBJ := rotate.o
-hw0604_OBJ :=
+hw0604_OBJ := projection.o
 hw0605_OBJ :=
 
 .PHONY:all
