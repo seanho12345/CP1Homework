@@ -5,7 +5,7 @@ hw0601_OBJ :=
 hw0602_OBJ := reun.o
 hw0603_OBJ := rotate.o
 hw0604_OBJ := projection.o
-hw0605_OBJ := card.o
+hw0605_OBJ := card.o 
 
 .PHONY:all
 all:$(TARGETS)
