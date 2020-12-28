@@ -12,6 +12,12 @@ int32_t func01(int32_t a,int32_t b){
     if(b==0){
         b = 13;
     }
+    if(a==1){
+        a = 14;
+    }
+    if(b==1){
+        b = 14;
+    }
     return a < b;
 }
 int32_t func02(int32_t a,int32_t b){
@@ -22,6 +28,18 @@ int32_t func02(int32_t a,int32_t b){
     }
     if(b==0){
         b = 13;
+    }
+    if(a==1){
+        a = 14;
+    }
+    if(b==1){
+        b = 14;
+    }
+    if(a==2){
+        a = 15;
+    }
+    if(b==2){
+        b = 15;
     }
     return a < b || b == 2;
 }
@@ -37,6 +55,13 @@ int32_t func03(int32_t a,int32_t b){
     }
     if(bvalue == 0){
         bvalue = 13;
+        bsuit--;
+    }
+    if(avalue == 1){
+        avalue = 14;
+    }
+    if(bvalue == 1){
+        bvalue = 14;
         bsuit--;
     }
     if(bsuit<asuit){
