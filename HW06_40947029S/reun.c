@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "reun.h"
 
-int32_t data[10]={0},last=0,rear=0;
+int32_t data[10]={0},undo[10]={0},undotime=0,rear=0;
 void isfull(){
     if(rear == 10){
         for(int32_t i=0;i<8;i++){
@@ -16,15 +16,17 @@ void actionpush(int32_t input){
     if(input == 0){
         return;
     }else if(input == -1 && rear > 0){
+        undo[undotime] = data[rear-1];
         rear--;
-    }else if(input == -2 && last != 0){
+        undotime++;
+    }else if(input == -2 && undotime != 0){
         isfull();
-        data[rear] = last;
+        data[rear] = undo[undotime-1];
         rear++;
-    }else{
+        undotime--;
+    }else if(input != -1 && input != -2){
         isfull();
         data[rear] = input;
-        last = input;
         rear++;
     }
 }
