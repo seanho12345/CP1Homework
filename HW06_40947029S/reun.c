@@ -26,6 +26,12 @@ void actionpush(int32_t input){
         undotime--;
     }else if(input != -1 && input != -2){
         isfull();
+        if(undotime>0){
+            for(int32_t i=0;i<10;i++){
+                undo[i] = 0;
+                undotime = 0;
+            }
+        }
         data[rear] = input;
         rear++;
     }
